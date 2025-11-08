@@ -1,6 +1,7 @@
 qdrant_storage/
 zotero_cache_metadata/
 analysis_outputs/
+extraction_outputs/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
