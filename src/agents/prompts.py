@@ -113,49 +113,18 @@ of facial expression synthesis and related areas. Your task is to read the conte
 article and extract specific knowledge points by answering a set of predefined questions.
 </Persona>
 <Task>
-    You will receive the contents of a scientific paper. Read everything carefully and evaluate the
-    provided article to extract its key knowledge points, you will need to answer the following questions:
+    You will receive the contents of a scientific paper and a list of papers that are on the review. Read everything carefully and evaluate the
+    provided article to extract its key knowledge points, you will need to answer the following question:
 
-    - Does the paper use Landmarks for facial expression synthesis?
-    - Does the paper use Action Units for facial expression synthesis?
-    - Does the paper use GANs for facial expression synthesis?
-    - Does the paper use Diffusion Models for facial expression synthesis?
-    - If GANs are used, which specific GAN architecture is employed? Ex: StyleGAN, CycleGAN, GANimation, etc.
-    - If Diffusion Models are used, which specific Diffusion architecture is employed? Ex: DDPM, Latent Diffusion, Stable Diffusion, etc.
-    - Which datasets are used in the paper for training and evaluation?
+    - Does the paper cite any of the other papers in the list?
 
-    If you cannot find the answer to any of the questions in the paper, respond with "null" for string answers, ]
-    an empty list for list answers, and "No" for boolean answers.
-    After answering the questions, provide a concise explanation for each answer.
+    If you cannot find the answer or the answer is negative, respond with "No".
+    After answering the question, provide a concise explanation for your answer.
 
     Please output a JSON object structured as follows:
     {
-        "Uses Landmarks?": {
-            "answer": [Answer the question with a boolean value],
-            "explanation": [Explain your answer concisely]
-        },
-        "Uses Action Units?": {
-            "answer": [Answer the question with a boolean value],
-            "explanation": [Explain your answer concisely]
-        },
-        "Uses GANs?": {
-            "answer": [Answer the question with a boolean value],
-            "explanation": [Explain your answer concisely]
-        },
-        "Uses Diffusion?": {
-            "answer": [Answer the question with a boolean value],
-            "explanation": [Explain your answer concisely]
-        },
-        "Specific GAN": {
-            "answer": [Answer the question with a string if applicable. If not answer with null],
-            "explanation": [Explain your answer concisely]
-        },
-        "Specific Diffusion": {
-            "answer": string | null,
-            "explanation": [Explain your answer concisely]
-        },
-        "Datasets used": {
-            "answer": string[],
+        "Cites": {
+            "answer": [Answer the question here],
             "explanation": [Explain your answer concisely]
         }
     }
@@ -164,40 +133,19 @@ article and extract specific knowledge points by answering a set of predefined q
 - Focus on extracting key information from the paper content.
 - Provide clear and direct answers to the questions based on the content of the paper.
 - Always explain the reason behind each answer concisely.
+- If the paper cites any of the listed papers, explain the context in which they are cited.
 - Always output valid JSON for the final answers section.
 </Guidelines>
 <InputFormat>
+# LIST OF PAPERS UNDER REVIEW
+[The list of all papers titles that are being reviewed]
 # PAPER CONTENT:
 [The full text content of the scientific paper to be analyzed]
 </InputFormat>
 <OutputFormat>
 {
-    "Uses Landmarks?": {
-        "answer": bool,
-        "explanation": string
-    },
-    "Uses Action Units?": {
-        "answer": bool,
-        "explanation": string
-    },
-    "Uses GANs?": {
-        "answer": bool,
-        "explanation": string
-    },
-    "Uses Diffusion?": {
-        "answer": bool,
-        "explanation": string
-    },
-    "Specific GAN": {
-        "answer": string | null,
-        "explanation": string
-    },
-    "Specific Diffusion": {
-        "answer": string | null,
-        "explanation": string
-    },
-    "Datasets used": {
-        "answer": string[],
+    "Cites": {
+        "answer": string,
         "explanation": string
     }
 }
@@ -213,6 +161,8 @@ ANALYZER_PROMPT = dedent("""
 """)
 
 EXTRACTOR_PROMPT = dedent("""
+# LIST OF PAPERS UNDER REVIEW
+{paper_list}
 # PAPER CONTENT:
 {paper_content}
 """)
